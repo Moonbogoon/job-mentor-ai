@@ -1,15 +1,16 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { format } from 'date-fns'
-import { PlusCircle, LogOut } from 'lucide-react'
+import { useToast } from '@/components/ui/use-toast'
+import { Plus, Trash2 } from 'lucide-react'
 import Link from 'next/link'
 
 interface Resume {
   id: string
   title: string
+  content: string
   created_at: string
   user_id: string
 }
@@ -19,40 +20,62 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true)
   const router = useRouter()
   const supabase = createClientComponentClient()
+  const { toast } = useToast()
 
   useEffect(() => {
-    const checkUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) {
-        router.push('/login')
-        return
+    const fetchResumes = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) {
+          router.push('/login')
+          return
+        }
+
+        const { data, error } = await supabase
+          .from('resumes')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+
+        if (error) throw error
+        setResumes(data || [])
+      } catch (error) {
+        toast({
+          title: 'Error',
+          description: 'Failed to load resumes',
+          variant: 'destructive',
+        })
+      } finally {
+        setLoading(false)
       }
-      fetchResumes(user.id)
     }
 
-    checkUser()
-  }, [router, supabase])
+    fetchResumes()
+  }, [router, supabase, toast])
 
-  const fetchResumes = async (userId: string) => {
+  const handleDelete = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this resume?')) return
+
     try {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('resumes')
-        .select('*')
-        .eq('user_id', userId)
-        .order('created_at', { ascending: false })
+        .delete()
+        .eq('id', id)
 
       if (error) throw error
-      setResumes(data || [])
-    } catch (error) {
-      console.error('Error fetching resumes:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut()
-    router.push('/login')
+      setResumes(resumes.filter(resume => resume.id !== id))
+      toast({
+        title: 'Success',
+        description: 'Resume deleted successfully',
+      })
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to delete resume',
+        variant: 'destructive',
+      })
+    }
   }
 
   if (loading) {
@@ -68,23 +91,18 @@ export default function Dashboard() {
       <nav className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <h1 className="text-xl font-bold text-gray-900">My Resumes</h1>
+            <div className="flex">
+              <div className="flex-shrink-0 flex items-center">
+                <h1 className="text-xl font-bold text-gray-900">My Resumes</h1>
+              </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <Link
-                href="/create-resume"
+            <div className="flex items-center">
+              <button
+                onClick={() => router.push('/create-resume')}
                 className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
-                <PlusCircle className="h-5 w-5 mr-2" />
-                New Resume
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                <LogOut className="h-5 w-5 mr-2" />
-                Logout
+                <Plus className="h-5 w-5 mr-2" />
+                Create New Resume
               </button>
             </div>
           </div>
@@ -94,40 +112,51 @@ export default function Dashboard() {
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
           {resumes.length === 0 ? (
-            <div className="text-center py-12">
+            <div className="text-center">
               <h3 className="mt-2 text-sm font-medium text-gray-900">No resumes</h3>
               <p className="mt-1 text-sm text-gray-500">
                 Get started by creating a new resume.
               </p>
               <div className="mt-6">
-                <Link
-                  href="/create-resume"
+                <button
+                  onClick={() => router.push('/create-resume')}
                   className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
-                  <PlusCircle className="h-5 w-5 mr-2" />
-                  Create Resume
-                </Link>
+                  <Plus className="h-5 w-5 mr-2" />
+                  Create New Resume
+                </button>
               </div>
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {resumes.map((resume) => (
-                <Link
+                <div
                   key={resume.id}
-                  href={`/resume/${resume.id}`}
-                  className="block"
+                  className="bg-white overflow-hidden shadow rounded-lg"
                 >
-                  <div className="bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow duration-200">
-                    <div className="px-4 py-5 sm:p-6">
-                      <h3 className="text-lg font-medium text-gray-900 truncate">
+                  <div className="px-4 py-5 sm:p-6">
+                    <h3 className="text-lg font-medium text-gray-900">
+                      <Link
+                        href={`/resume/${resume.id}`}
+                        className="hover:text-indigo-600"
+                      >
                         {resume.title}
-                      </h3>
-                      <p className="mt-1 text-sm text-gray-500">
-                        Created {format(new Date(resume.created_at), "MMM d, yyyy")}
-                      </p>
+                      </Link>
+                    </h3>
+                    <p className="mt-1 text-sm text-gray-500">
+                      Created {new Date(resume.created_at).toLocaleDateString()}
+                    </p>
+                    <div className="mt-4 flex justify-end">
+                      <button
+                        onClick={() => handleDelete(resume.id)}
+                        className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                      >
+                        <Trash2 className="h-4 w-4 mr-1" />
+                        Delete
+                      </button>
                     </div>
                   </div>
-                </Link>
+                </div>
               ))}
             </div>
           )}

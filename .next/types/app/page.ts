@@ -1,8 +1,8 @@
-// File: C:\Users\Moon\Documents\GitHub\job-mentor-ai\app\signup\page.tsx
-import * as entry from '../../../../app/signup/page.js'
+// File: C:\Users\Moon\Documents\GitHub\job-mentor-ai\app\page.tsx
+import * as entry from '../../../app/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
-type TEntry = typeof import('../../../../app/signup/page.js')
+type TEntry = typeof import('../../../app/page.js')
 
 // Check that the entry is a valid entry
 checkFields<Diff<{
