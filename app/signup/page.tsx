@@ -19,20 +19,33 @@ export default function SignUp() {
     setLoading(true)
 
     try {
-      const { error: signUpError } = await supabase.auth.signUp({
+      console.log("Starting signup process...")
+      console.log("Supabase URL:", process.env.NEXT_PUBLIC_SUPABASE_URL)
+      
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
       })
 
-      if (signUpError) throw signUpError
+      console.log("Signup response:", { signUpData, signUpError })
 
-      // Sign in the user immediately after signup
-      const { error: signInError } = await supabase.auth.signInWithPassword({
+      if (signUpError) {
+        console.error("Signup error:", signUpError)
+        throw signUpError
+      }
+
+      console.log("Starting sign in process...")
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
 
-      if (signInError) throw signInError
+      console.log("Sign in response:", { signInData, signInError })
+
+      if (signInError) {
+        console.error("Sign in error:", signInError)
+        throw signInError
+      }
 
       toast({
         title: "Success",
@@ -41,6 +54,7 @@ export default function SignUp() {
       
       router.push("/dashboard")
     } catch (error: any) {
+      console.error("Full error object:", error)
       toast({
         title: "Error",
         description: error.message || "Failed to sign up",
