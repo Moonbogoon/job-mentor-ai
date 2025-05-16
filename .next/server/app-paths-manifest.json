@@ -1,6 +1,8 @@
 {
   "/page": "app/page.js",
-  "/create-resume/page": "app/create-resume/page.js",
   "/dashboard/page": "app/dashboard/page.js",
-  "/resume/[id]/page": "app/resume/[id]/page.js"
+  "/resume/[id]/page": "app/resume/[id]/page.js",
+  "/interview/[id]/page": "app/interview/[id]/page.js",
+  "/api/generate-interview-questions/route": "app/api/generate-interview-questions/route.js",
+  "/create-resume/page": "app/create-resume/page.js"
 }
