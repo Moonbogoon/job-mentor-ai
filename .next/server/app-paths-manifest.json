@@ -1,9 +1,9 @@
 {
-  "/create-resume/page": "app/create-resume/page.js",
+  "/not-found": "app/not-found.js",
   "/page": "app/page.js",
   "/dashboard/page": "app/dashboard/page.js",
   "/api/optimize-resume/route": "app/api/optimize-resume/route.js",
-  "/resume/[id]/page": "app/resume/[id]/page.js",
   "/interview/[id]/page": "app/interview/[id]/page.js",
+  "/resume/[id]/page": "app/resume/[id]/page.js",
   "/api/generate-interview-questions/route": "app/api/generate-interview-questions/route.js"
 }

@@ -17,16 +17,41 @@ export async function POST(request: Request) {
 Current content for reference:
 ${currentContent}
 
-Format the response as a JSON array of strings, with each string being a suggestion.`
+IMPORTANT: Your response must be a valid JSON array of strings. Each string should be a suggestion.
+Example format:
+["Suggestion 1", "Suggestion 2", "Suggestion 3", "Suggestion 4", "Suggestion 5"]`
 
     const responseContent = await generateText(prompt)
-    const suggestions = JSON.parse(responseContent)
+    console.log('Raw response:', responseContent);
+
+    let suggestions: string[];
+    try {
+      suggestions = JSON.parse(responseContent);
+      if (!Array.isArray(suggestions)) {
+        throw new Error('Response is not an array');
+      }
+      if (suggestions.length === 0) {
+        throw new Error('Empty suggestions array');
+      }
+    } catch (parseError) {
+      console.error('JSON parse error:', parseError);
+      // Fallback: Try to extract suggestions from text
+      suggestions = responseContent
+        .split('\n')
+        .filter(line => line.trim().startsWith('"') || line.trim().startsWith('-'))
+        .map(line => line.replace(/^["-]\s*/, '').replace(/["\s]*$/, ''))
+        .filter(Boolean);
+      
+      if (suggestions.length === 0) {
+        throw new Error('Failed to parse suggestions from response');
+      }
+    }
 
     return NextResponse.json({ suggestions })
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error generating suggestions:", error)
     return NextResponse.json(
-      { error: "Failed to generate suggestions" },
+      { error: error.message || "Failed to generate suggestions" },
       { status: 500 }
     )
   }
