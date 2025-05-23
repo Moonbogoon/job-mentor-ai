@@ -21,11 +21,6 @@
       "static/chunks/main-app.js",
       "static/chunks/app/resume/[id]/page.js"
     ],
-    "/interview/[id]/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/interview/[id]/page.js"
-    ],
     "/create-resume/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",

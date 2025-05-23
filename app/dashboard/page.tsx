@@ -57,24 +57,59 @@ export default function Dashboard() {
     if (!confirm('Are you sure you want to delete this resume?')) return
 
     try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) {
+        toast({
+          title: 'Error',
+          description: 'You must be logged in to delete a resume',
+          variant: 'destructive',
+        })
+        router.push('/login')
+        return
+      }
+
+      console.log('Attempting to delete resume:', { id, userId: user.id })
+
       const { error } = await supabase
         .from('resumes')
         .delete()
         .eq('id', id)
+        .eq('user_id', user.id)
 
-      if (error) throw error
+      if (error) {
+        console.error('Delete error details:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        })
+        throw error
+      }
 
-      setResumes(resumes.filter(resume => resume.id !== id))
+      console.log('Resume deleted successfully:', id)
+      setResumes(prevResumes => prevResumes.filter(resume => resume.id !== id))
+      
       toast({
         title: 'Success',
         description: 'Resume deleted successfully',
       })
-    } catch (error) {
+    } catch (error: any) {
+      console.error('Delete error:', error)
       toast({
         title: 'Error',
-        description: 'Failed to delete resume',
+        description: error.message || 'Failed to delete resume. Please try again.',
         variant: 'destructive',
       })
+      // Refresh the resumes list in case of error
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        const { data } = await supabase
+          .from('resumes')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+        setResumes(data || [])
+      }
     }
   }
 
