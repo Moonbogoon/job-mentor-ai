@@ -1,9 +1,5 @@
 import { NextResponse } from "next/server"
-import OpenAI from "openai"
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
+import { generateText } from "@/lib/gemini"
 
 export async function POST(request: Request) {
   try {
@@ -23,14 +19,7 @@ ${currentContent}
 
 Format the response as a JSON array of strings, with each string being a suggestion.`
 
-    const completion = await openai.chat.completions.create({
-      messages: [{ role: "user", content: prompt }],
-      model: "gpt-4",
-      temperature: 0.7,
-      max_tokens: 1000,
-    })
-
-    const responseContent = completion.choices[0]?.message?.content || "[]"
+    const responseContent = await generateText(prompt)
     const suggestions = JSON.parse(responseContent)
 
     return NextResponse.json({ suggestions })

@@ -1,9 +1,5 @@
 import { NextResponse } from "next/server"
-import OpenAI from "openai"
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
+import { generateText } from "@/lib/gemini"
 
 export async function POST(request: Request) {
   try {
@@ -32,14 +28,7 @@ Focus on:
 4. Alignment with their resume content
 5. Areas where they could provide more detail or better examples`
 
-    const completion = await openai.chat.completions.create({
-      messages: [{ role: "user", content: prompt }],
-      model: "gpt-4",
-      temperature: 0.7,
-      max_tokens: 1500,
-    })
-
-    const content = completion.choices[0]?.message?.content || "{}"
+    const content = await generateText(prompt)
     const feedback = JSON.parse(content)
 
     return NextResponse.json(feedback)

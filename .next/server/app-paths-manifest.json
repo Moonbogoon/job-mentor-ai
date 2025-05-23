@@ -1,6 +1,4 @@
 {
   "/dashboard/page": "app/dashboard/page.js",
-  "/api/generate-resume-suggestions/route": "app/api/generate-resume-suggestions/route.js",
-  "/create-resume/page": "app/create-resume/page.js",
-  "/resume/[id]/page": "app/resume/[id]/page.js"
+  "/create-resume/page": "app/create-resume/page.js"
 }

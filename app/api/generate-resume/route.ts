@@ -1,9 +1,5 @@
 import { NextResponse } from "next/server"
-import OpenAI from "openai"
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
+import { generateText } from "@/lib/gemini"
 
 export async function POST(request: Request) {
   try {
@@ -25,14 +21,7 @@ Please format the resume in a clean, professional style with the following secti
 
 Make the content specific to the job title and experience provided, but keep it professional and concise.`
 
-    const completion = await openai.chat.completions.create({
-      messages: [{ role: "user", content: prompt }],
-      model: "gpt-4",
-      temperature: 0.7,
-      max_tokens: 1000,
-    })
-
-    const content = completion.choices[0]?.message?.content || ""
+    const content = await generateText(prompt)
 
     return NextResponse.json({ content })
   } catch (error) {
