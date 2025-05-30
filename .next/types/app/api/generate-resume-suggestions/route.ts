@@ -1,8 +1,8 @@
-// File: C:\Users\Moon\Documents\GitHub\job-mentor-ai\app\api\optimize-resume\route.ts
-import * as entry from '../../../../../app/api/optimize-resume/route.js'
+// File: C:\Users\Moon\Documents\GitHub\job-mentor-ai\app\api\generate-resume-suggestions\route.ts
+import * as entry from '../../../../../app/api/generate-resume-suggestions/route.js'
 import type { NextRequest } from 'next/server.js'
 
-type TEntry = typeof import('../../../../../app/api/optimize-resume/route.js')
+type TEntry = typeof import('../../../../../app/api/generate-resume-suggestions/route.js')
 
 // Check that the entry is a valid entry
 checkFields<Diff<{
