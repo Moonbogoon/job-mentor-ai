@@ -1,5 +1,5 @@
 // lib/gemini.ts
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI, GenerativeModel } from "@google/generative-ai";
 
 export async function generateText(prompt: string): Promise<string> {
     const apiKey = process.env.GEMINI_API_KEY;
@@ -12,7 +12,17 @@ export async function generateText(prompt: string): Promise<string> {
     try {
         console.log('Initializing Gemini API...');
         const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+        
+        // Use the basic model
+        const model = genAI.getGenerativeModel({ 
+            model: "gemini-pro",
+            generationConfig: {
+                temperature: 0.7,
+                topK: 40,
+                topP: 0.95,
+                maxOutputTokens: 1024,
+            },
+        });
 
         console.log('Generating content...');
         const result = await model.generateContent(prompt);
@@ -21,8 +31,14 @@ export async function generateText(prompt: string): Promise<string> {
         
         console.log('Generated content:', text);
         return text;
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error in generateText:', error);
+        
+        // Check if it's a rate limit error
+        if (error.message?.includes('429') || error.message?.includes('quota')) {
+            throw new Error('API rate limit exceeded. Please try again in a few minutes.');
+        }
+        
         throw error;
     }
 }

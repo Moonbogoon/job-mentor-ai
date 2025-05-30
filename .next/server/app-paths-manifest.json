@@ -1,9 +1,8 @@
 {
   "/not-found": "app/not-found.js",
-  "/resume/[id]/page": "app/resume/[id]/page.js",
-  "/interview/[id]/page": "app/interview/[id]/page.js",
-  "/api/generate-interview-questions/route": "app/api/generate-interview-questions/route.js",
   "/dashboard/page": "app/dashboard/page.js",
-  "/create-resume/page": "app/create-resume/page.js",
-  "/api/generate-resume-suggestions/route": "app/api/generate-resume-suggestions/route.js"
+  "/resume/[id]/page": "app/resume/[id]/page.js",
+  "/api/optimize-resume/route": "app/api/optimize-resume/route.js",
+  "/interview/[id]/page": "app/interview/[id]/page.js",
+  "/api/generate-interview-questions/route": "app/api/generate-interview-questions/route.js"
 }
