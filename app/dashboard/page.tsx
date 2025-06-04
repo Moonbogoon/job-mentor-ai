@@ -51,7 +51,7 @@ export default function Dashboard() {
     }
 
     fetchResumes()
-  }, [router, supabase, toast])
+  }, [router, supabase])
 
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this resume?')) return

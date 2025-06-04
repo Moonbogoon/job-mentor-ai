@@ -43,7 +43,7 @@ export default function ResumePage({ params }: { params: { id: string } }) {
     }
 
     fetchResume()
-  }, [params.id, router, supabase, toast])
+  }, [params.id, router, supabase])
 
   const handleOptimize = async () => {
     if (!resume?.content) {

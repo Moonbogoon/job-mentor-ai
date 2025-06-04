@@ -84,7 +84,7 @@ export default function InterviewPage({ params }: { params: { id: string } }) {
     }
 
     fetchResumeAndGenerateQuestions()
-  }, [params.id, router, supabase, toast])
+  }, [params.id, router, supabase])
 
   const handleSubmitAnswer = async () => {
     if (!interviewState.currentAnswer.trim()) {
