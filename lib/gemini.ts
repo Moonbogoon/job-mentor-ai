@@ -16,7 +16,7 @@ export async function generateText(prompt: string): Promise<string> {
 
     try {
         console.log('Initializing Gemini API...');
-        const genAI = new GoogleGenerativeAI(apiKey);
+        const genAI = new GoogleGenerativeAI(apiKey, { apiVersion: 'v1beta1' });
         
         // Use the basic model
         const model = genAI.getGenerativeModel({ 
