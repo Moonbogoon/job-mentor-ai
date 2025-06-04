@@ -1,11 +1,16 @@
 // lib/gemini.ts
-import { GoogleGenerativeAI, GenerativeModel } from "@google/generative-ai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 export async function generateText(prompt: string): Promise<string> {
-    const apiKey = process.env.GEMINI_API_KEY;
+    const apiKey =
+        process.env.GEMINI_API_KEY ||
+        process.env.GOOGLE_API_KEY ||
+        process.env.GOOGLE_AI_API_KEY;
     
     if (!apiKey) {
-        console.error('GEMINI_API_KEY is not set in environment variables');
+        console.error(
+            'Gemini API key is not set. Please define GEMINI_API_KEY or GOOGLE_API_KEY.'
+        );
         throw new Error('GEMINI_API_KEY is not configured');
     }
 
