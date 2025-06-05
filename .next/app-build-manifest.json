@@ -1,15 +1,15 @@
 {
   "pages": {
+    "/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/page.js"
+    ],
     "/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
-    ],
-    "/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/page.js"
     ],
     "/dashboard/page": [
       "static/chunks/webpack.js",
@@ -21,10 +21,10 @@
       "static/chunks/main-app.js",
       "static/chunks/app/resume/[id]/page.js"
     ],
-    "/interview/[id]/page": [
+    "/create-resume/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/interview/[id]/page.js"
+      "static/chunks/app/create-resume/page.js"
     ],
     "/not-found": [
       "static/chunks/webpack.js",

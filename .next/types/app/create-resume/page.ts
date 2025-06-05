@@ -1,8 +1,8 @@
-// File: C:\Users\Moon\Documents\GitHub\job-mentor-ai\app\interview\[id]\page.tsx
-import * as entry from '../../../../../app/interview/[id]/page.js'
+// File: C:\Users\Moon\Documents\GitHub\job-mentor-ai\app\create-resume\page.tsx
+import * as entry from '../../../../app/create-resume/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
-type TEntry = typeof import('../../../../../app/interview/[id]/page.js')
+type TEntry = typeof import('../../../../app/create-resume/page.js')
 
 // Check that the entry is a valid entry
 checkFields<Diff<{

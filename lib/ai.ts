@@ -56,9 +56,13 @@ export async function generateText(prompt: string): Promise<string> {
                 model: "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B",
                 messages: [
                     {
-                        role: "user",
-                        content: prompt,
+                        role: "system",
+                        content: "You are a helpful AI assistant. Always respond with clean text only. Never include XML tags, HTML tags, or any other markup. Never include your thinking process or internal dialogue."
                     },
+                    {
+                        role: "user",
+                        content: prompt
+                    }
                 ],
             });
             
@@ -66,9 +70,16 @@ export async function generateText(prompt: string): Promise<string> {
             if (!text) {
                 throw new Error('No content generated from the model');
             }
-            
+
+            // Clean the response
+            const cleanedText = text
+                .replace(/<[^>]*>/g, '') // Remove any XML/HTML tags
+                .replace(/\n\s*\n/g, '\n') // Remove multiple empty lines
+                .replace(/^\s+|\s+$/g, '') // Trim whitespace
+                .trim();
+
             console.log('Generated content successfully');
-            return text;
+            return cleanedText;
         } catch (error: any) {
             console.error(`Attempt ${attempt} failed:`, error);
             lastError = error;

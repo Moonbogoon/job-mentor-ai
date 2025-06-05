@@ -16,7 +16,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // First, generate questions without JSON formatting
     const prompt = `Generate 5 technical interview questions for a ${experienceLevel} ${jobTitle} position.
     The candidate should have experience with: ${skills.join(', ')}.
     
@@ -27,6 +26,8 @@ export async function POST(request: Request) {
     4. Each question should be on a new line
     5. Do not include any numbering, bullet points, or formatting
     6. Do not include any explanations or additional text
+    7. Do not include any XML tags, HTML tags, or other markup
+    8. Do not include any thinking process or internal dialogue
     
     Example format:
     What is your experience with React hooks?

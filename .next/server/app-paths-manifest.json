@@ -3,7 +3,6 @@
   "/page": "app/page.js",
   "/dashboard/page": "app/dashboard/page.js",
   "/resume/[id]/page": "app/resume/[id]/page.js",
-  "/api/generate-interview-questions/route": "app/api/generate-interview-questions/route.js",
-  "/interview/[id]/page": "app/interview/[id]/page.js",
-  "/api/evaluate-answer/route": "app/api/evaluate-answer/route.js"
+  "/create-resume/page": "app/create-resume/page.js",
+  "/api/generate-resume-suggestions/route": "app/api/generate-resume-suggestions/route.js"
 }
