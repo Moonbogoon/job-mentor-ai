@@ -1,4 +1,4 @@
-import { HfInference } from '@huggingface/inference';
+import { InferenceClient } from "@huggingface/inference";
 
 // Extend HfInference type to include conversational method
 declare module '@huggingface/inference' {
@@ -48,24 +48,25 @@ export async function generateText(prompt: string): Promise<string> {
     for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
         try {
             console.log(`Attempt ${attempt} of ${MAX_RETRIES}...`);
-            const hf = new HfInference(apiKey);
+            const client = new InferenceClient(apiKey);
             
             console.log('Generating content...');
-            const response = await hf.textGeneration({
-                model: "facebook/opt-350m",
-                inputs: `You are a helpful AI assistant. Please provide a detailed and accurate response to the following request:
-
-${prompt}`,
-                parameters: {
-                    max_new_tokens: 1024,
-                    temperature: 0.7,
-                    top_p: 0.95,
-                    repetition_penalty: 1.1,
-                    do_sample: true,
-                }
+            const response = await client.chatCompletion({
+                provider: "auto",
+                model: "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B",
+                messages: [
+                    {
+                        role: "user",
+                        content: prompt,
+                    },
+                ],
             });
             
-            const text = response.generated_text;
+            const text = response.choices[0].message.content;
+            if (!text) {
+                throw new Error('No content generated from the model');
+            }
+            
             console.log('Generated content successfully');
             return text;
         } catch (error: any) {
