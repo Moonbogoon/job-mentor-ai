@@ -58,7 +58,11 @@ export default function InterviewPage({ params }: { params: { id: string } }) {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ resumeContent: data.content }),
+          body: JSON.stringify({
+            jobTitle: data.job_title || "Software Engineer",
+            experienceLevel: data.experience_level || "Mid-level",
+            skills: data.skills || ["JavaScript", "React", "Node.js"]
+          }),
         })
 
         if (!response.ok) {

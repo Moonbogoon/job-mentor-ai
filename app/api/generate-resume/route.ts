@@ -1,33 +1,43 @@
 import { NextResponse } from "next/server"
-import { generateText } from "@/lib/gemini"
+import { generateText } from "@/lib/openai"
 
 export async function POST(request: Request) {
   try {
-    const { jobTitle, experience, skills } = await request.json()
+    const { jobDescription } = await request.json()
 
-    const prompt = `Create a professional resume for a ${jobTitle} position. 
-    
-Experience Summary:
-${experience}
+    if (!jobDescription) {
+      return NextResponse.json(
+        { error: "Job description is required" },
+        { status: 400 }
+      )
+    }
 
-Key Skills:
-${skills}
+    const prompt = `Create a professional resume based on the following job description. 
+    Focus on matching the job requirements and using industry-specific keywords.
 
-Please format the resume in a clean, professional style with the following sections:
-1. Professional Summary
-2. Skills
-3. Professional Experience
-4. Education (include a generic but realistic education background)
+    Job Description:
+    ${jobDescription}
 
-Make the content specific to the job title and experience provided, but keep it professional and concise.`
+    Please create a professional resume with the following sections:
+    1. Professional Summary - A compelling introduction that aligns with the job requirements
+    2. Key Skills - Highlight skills that match the job description
+    3. Professional Experience - Include relevant experience that demonstrates the required qualifications
+    4. Education - Include a standard education section
+
+    Make sure to:
+    - Use keywords from the job description
+    - Emphasize relevant achievements and responsibilities
+    - Keep the content professional and concise
+    - Focus on transferable skills that match the job requirements
+    - Use action verbs and quantifiable achievements where possible`
 
     const content = await generateText(prompt)
 
     return NextResponse.json({ content })
-  } catch (error) {
-    console.error("Error generating resume:", error)
+  } catch (error: any) {
+    console.error("Error in generate-resume:", error)
     return NextResponse.json(
-      { error: "Failed to generate resume" },
+      { error: error.message || "Failed to generate resume" },
       { status: 500 }
     )
   }
