@@ -12,17 +12,20 @@ export async function POST(request: Request) {
       )
     }
 
-    const prompt = `Analyze the following resume content and provide specific suggestions for improvement in these areas:
-    1. Content and Structure
-    2. Skills and Experience
-    3. Achievements and Impact
-    4. Language and Tone
-    5. Overall Professional Presentation
+    const prompt = `Based on the following resume content, provide 3-5 specific, actionable suggestions for improvement.
+    Each suggestion should be a complete, professional sentence that can be directly used in a resume.
+    Focus on creating content that highlights achievements, skills, and experiences in a compelling way.
 
     Resume content:
     ${content}
 
-    Please provide 3-5 specific, actionable suggestions.
+    Please provide suggestions that:
+    1. Are complete, professional sentences
+    2. Can be directly inserted into a resume
+    3. Highlight specific achievements and skills
+    4. Use strong action verbs
+    5. Include quantifiable results where possible
+
     Format each suggestion as a separate line starting with a bullet point (-).
     Do not include any explanations, notes, or additional text.
     Do not include any XML tags, HTML tags, or other markup.

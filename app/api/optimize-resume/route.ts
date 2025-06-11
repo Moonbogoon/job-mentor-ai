@@ -25,10 +25,15 @@ export async function POST(request: Request) {
     4. Maintains a professional tone
     5. Is well-structured and easy to read
 
-    Format the response as a clean, professional resume with appropriate sections.
-    Do not include any explanations, notes, or additional text.
-    Do not include any XML tags, HTML tags, or other markup.
-    Do not include any thinking process or internal dialogue.`;
+    Important:
+    - Provide ONLY the optimized resume content
+    - Do not include any explanations or notes
+    - Do not include any thinking process or internal dialogue
+    - Do not include any XML tags, HTML tags, or other markup
+    - Format the content as a clean, professional resume with appropriate sections
+    - Each section should be clearly separated with a newline
+    - Use bullet points for achievements and responsibilities
+    - Keep the content concise and impactful`;
 
     const content = await generateText(prompt)
     console.log('Raw optimized content:', content);
@@ -38,6 +43,7 @@ export async function POST(request: Request) {
       .replace(/<[^>]*>/g, '') // Remove any XML/HTML tags
       .replace(/\n\s*\n/g, '\n') // Remove multiple empty lines
       .replace(/^\s+|\s+$/g, '') // Trim whitespace
+      .replace(/^[•\-\*]\s*/gm, '• ') // Standardize bullet points
       .trim();
 
     return NextResponse.json({ content: cleanedContent })

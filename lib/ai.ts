@@ -57,13 +57,18 @@ export async function generateText(prompt: string): Promise<string> {
                 messages: [
                     {
                         role: "system",
-                        content: "You are a helpful AI assistant. Always respond with clean text only. Never include XML tags, HTML tags, or any other markup. Never include your thinking process or internal dialogue."
+                        content: "You are a professional resume writer and career advisor. Your task is to provide direct, actionable content that can be immediately used in resumes. Never include your thinking process, internal dialogue, or any meta-commentary. Focus on delivering clean, professional content that highlights achievements, skills, and experiences in a compelling way. Always provide complete, polished content that is ready to use."
                     },
                     {
                         role: "user",
                         content: prompt
                     }
                 ],
+                temperature: 0.7,
+                max_tokens: 1000,
+                top_p: 0.9,
+                frequency_penalty: 0.5,
+                presence_penalty: 0.5
             });
             
             const text = response.choices[0].message.content;
